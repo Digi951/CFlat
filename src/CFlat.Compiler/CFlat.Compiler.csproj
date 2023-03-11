@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Enums\" />
+    <None Remove="CodeAnalysis\" />
+    <None Remove="CodeAnalysis\Syntax\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Enums\" />
+    <Folder Include="CodeAnalysis\" />
+    <Folder Include="CodeAnalysis\Syntax\" />
+  </ItemGroup>
+</Project>

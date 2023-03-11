@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1706.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CFlat.CommandLine", "src\CFlat.CommandLine\CFlat.CommandLine.csproj", "{2E3D14AE-02A1-4835-A222-F275D4666936}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CFlat.Compiler", "src\CFlat.Compiler\CFlat.Compiler.csproj", "{72AC74D2-43AA-4557-BE8C-58910D22542F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{56928098-F36B-42AF-A3E0-4157D100F3D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0905C278-3B26-4C36-BEE4-81531CEC7465}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2E3D14AE-02A1-4835-A222-F275D4666936}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E3D14AE-02A1-4835-A222-F275D4666936}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E3D14AE-02A1-4835-A222-F275D4666936}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E3D14AE-02A1-4835-A222-F275D4666936}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72AC74D2-43AA-4557-BE8C-58910D22542F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72AC74D2-43AA-4557-BE8C-58910D22542F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72AC74D2-43AA-4557-BE8C-58910D22542F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72AC74D2-43AA-4557-BE8C-58910D22542F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A6DBBED-8FF3-44F8-9A34-4B6E99E5F442}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2E3D14AE-02A1-4835-A222-F275D4666936} = {56928098-F36B-42AF-A3E0-4157D100F3D6}
+		{72AC74D2-43AA-4557-BE8C-58910D22542F} = {56928098-F36B-42AF-A3E0-4157D100F3D6}
+	EndGlobalSection
+EndGlobal
