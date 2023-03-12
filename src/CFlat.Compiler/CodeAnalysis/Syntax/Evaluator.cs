@@ -3,7 +3,7 @@ using CFlat.Compiler.Enums;
 
 namespace CFlat.Compiler.CodeAnalysis.Syntax;
 
-public class Evaluator
+public sealed class Evaluator
 {
     private readonly ExpressionSyntax _root;
 
@@ -19,9 +19,9 @@ public class Evaluator
 
     private Int32 EvaluateExpression(ExpressionSyntax node)
     {
-        if (node is NumberExpressionSyntax n)
+        if (node is LiteralExpressionSyntax n)
         {
-            return (Int32)n.NumberToken.Value;
+            return (Int32)n.LiteralToken.Value;
         }
 
         if (node is BinaryExpressionSyntax b)

@@ -3,7 +3,7 @@ using CFlat.Compiler.Enums;
 
 namespace CFlat.Compiler.CodeAnalysis.Syntax;
 
-public class Parser
+internal sealed class Parser
 {
     private List<String> _diagnostics = new();
     private readonly SyntaxToken[] _tokens;
@@ -18,7 +18,7 @@ public class Parser
 
         do
         {
-            token = lexer.NextToken();
+            token = lexer.Lex();
 
             if (token.Kind is (not SyntaxKind.WhitespaceToken and
                                 not SyntaxKind.BadToken))
@@ -53,7 +53,7 @@ public class Parser
         return current;
     }
 
-    private SyntaxToken Match(SyntaxKind kind)
+    private SyntaxToken MatchToken(SyntaxKind kind)
     {
         if (Current.Kind == kind)
         {
@@ -69,10 +69,14 @@ public class Parser
         return ParseTermExpression();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public SyntaxTree Parse()
     {
         ExpressionSyntax expression = ParseTermExpression();
-        SyntaxToken endOfFileToken = Match(SyntaxKind.EndOfFileToken);
+        SyntaxToken endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
         return new SyntaxTree(_diagnostics, expression, endOfFileToken);
     }
 
@@ -112,12 +116,12 @@ public class Parser
         {
             var left = NextToken();
             var expression = ParseExpression();
-            var right = Match(SyntaxKind.CloseParenthesisToken);
+            var right = MatchToken(SyntaxKind.CloseParenthesisToken);
             return new ParenthesizedExpressionSyntax(left, expression, right);
         }
 
-        SyntaxToken numberToken = Match(SyntaxKind.NumberToken);
-        return new NumberExpressionSyntax(numberToken);
+        SyntaxToken numberToken = MatchToken(SyntaxKind.NumberToken);
+        return new LiteralExpressionSyntax(numberToken);
     }
 }
 

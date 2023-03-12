@@ -2,7 +2,7 @@
 using CFlat.Compiler.Enums;
 using CFlat.Compiler.CodeAnalysis.Syntax;
 
-namespace CFlat.Compiler;
+namespace CFlat.Compiler.CodeAnalysis.Syntax;
 
 sealed class BinaryExpressionSyntax : ExpressionSyntax
 {

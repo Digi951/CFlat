@@ -7,13 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Enums\" />
     <None Remove="CodeAnalysis\" />
     <None Remove="CodeAnalysis\Syntax\" />
+    <None Remove="CodeAnalysis\Enums\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Enums\" />
     <Folder Include="CodeAnalysis\" />
     <Folder Include="CodeAnalysis\Syntax\" />
+    <Folder Include="CodeAnalysis\Enums\" />
   </ItemGroup>
 </Project>

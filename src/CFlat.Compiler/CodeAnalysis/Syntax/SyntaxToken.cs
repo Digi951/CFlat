@@ -2,7 +2,7 @@
 
 namespace CFlat.Compiler.CodeAnalysis.Syntax;
 
-public class SyntaxToken : SyntaxNode
+public sealed class SyntaxToken : SyntaxNode
 {
     public SyntaxToken(SyntaxKind kind, Int32 position, String text, object? value = null)
     {

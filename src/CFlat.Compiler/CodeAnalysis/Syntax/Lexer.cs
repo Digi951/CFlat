@@ -3,7 +3,7 @@ using CFlat.Compiler.Enums;
 
 namespace CFlat.Compiler.CodeAnalysis.Syntax;
 
-public class Lexer
+internal sealed class Lexer
 {
     private readonly String _text;
     private Int32 _position;
@@ -29,12 +29,12 @@ public class Lexer
         _position++;
     }
 
-    public SyntaxToken NextToken()
-    {
-        // <numbers>
-        // + - * / ( )
-        // <whitespace
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public SyntaxToken Lex()
+    {  
         if (_position >= _text.Length)
         {
             return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0");

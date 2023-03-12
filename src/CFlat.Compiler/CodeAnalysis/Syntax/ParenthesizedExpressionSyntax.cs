@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using CFlat.Compiler.Enums;
 using CFlat.Compiler.CodeAnalysis.Syntax;
 
-namespace CFlat.Compiler;
+namespace CFlat.Compiler.CodeAnalysis.Syntax;
 
 public sealed class ParenthesizedExpressionSyntax : ExpressionSyntax
 {
