@@ -4,7 +4,7 @@ namespace CFlat.Compiler.CodeAnalysis.Syntax;
 
 public sealed class SyntaxToken : SyntaxNode
 {
-    public SyntaxToken(SyntaxKind kind, Int32 position, String text, object? value = null)
+    public SyntaxToken(SyntaxKind kind, Int32 position, String? text = null, object? value = null)
     {
         Kind = kind;
         Position = position;
@@ -14,7 +14,7 @@ public sealed class SyntaxToken : SyntaxNode
 
     public override SyntaxKind Kind { get; }
     public int Position { get; }
-    public string Text { get; }
+    public string? Text { get; }
     public object? Value { get; }
 
     public override IEnumerable<SyntaxNode> GetChildren()

@@ -61,12 +61,7 @@ internal sealed class Parser
         }
 
         _diagnostics.Add($"ERROR: Unexpexted token <{Current.Kind}>, expected <{kind}>");
-        return new SyntaxToken(kind, Current.Position, null, null);
-    }
-
-    private ExpressionSyntax ParseExpression()
-    {
-        return ParseTermExpression();
+        return new SyntaxToken(kind, Current.Position);
     }
 
     /// <summary>
@@ -80,42 +75,42 @@ internal sealed class Parser
         return new SyntaxTree(_diagnostics, expression, endOfFileToken);
     }
 
-    private ExpressionSyntax ParseTermExpression()
+    private ExpressionSyntax ParseTermExpression(Int32 parentPrecedence = 0)
     {
-        var left = ParseFactorExpression();
+        ExpressionSyntax left = ParsePrimaryExpression();
 
-        while (Current.Kind == SyntaxKind.PlusToken ||
-            Current.Kind == SyntaxKind.MinusToken)
+        while (true)
         {
-            var operatorToken = NextToken();
-            var right = ParseFactorExpression();
+            Int32 precedence = GetBinaryOperatorPrecedence(Current.Kind);
+
+            if (precedence == 0 || precedence <= parentPrecedence) { break; }
+
+            SyntaxToken operatorToken = NextToken();
+            ExpressionSyntax right = ParseTermExpression(precedence);
             left = new BinaryExpressionSyntax(left, operatorToken, right);
         }
 
         return left;
     }
 
-    private ExpressionSyntax ParseFactorExpression()
+    private static Int32 GetBinaryOperatorPrecedence(SyntaxKind kind)
     {
-        var left = ParsePrimaryExpression();
-
-        while (Current.Kind == SyntaxKind.StarToken ||
-            Current.Kind == SyntaxKind.SlashToken)
+        return kind switch
         {
-            var operatorToken = NextToken();
-            var right = ParsePrimaryExpression();
-            left = new BinaryExpressionSyntax(left, operatorToken, right);
-        }
-
-        return left;
-    }
+            SyntaxKind.PlusToken => 1,
+            SyntaxKind.MinusToken => 1,
+            SyntaxKind.StarToken => 2,
+            SyntaxKind.SlashToken => 2,
+            _ => 0
+        } ;
+    } 
 
     private ExpressionSyntax ParsePrimaryExpression()
     {
         if (Current.Kind == SyntaxKind.OpenParenthesisToken)
         {
             var left = NextToken();
-            var expression = ParseExpression();
+            var expression = ParseTermExpression();
             var right = MatchToken(SyntaxKind.CloseParenthesisToken);
             return new ParenthesizedExpressionSyntax(left, expression, right);
         }
