@@ -27,7 +27,7 @@ while (true)
     var binder = new Binder();
     var boundExpression = binder.BindExpression(syntaxTree.Root);
 
-    IReadOnlyList<String> diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
+    var diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
 
     if (showTree)
     {
@@ -36,18 +36,17 @@ while (true)
         Console.ResetColor();
     }
 
-
     if (!diagnostics.Any())
     {
         Evaluator evaluator = new(boundExpression);
-        Int32 result = evaluator.Evaluate();
+        var result = evaluator.Evaluate();
         Console.WriteLine(result);
     }
     else
     {
         Console.ForegroundColor = ConsoleColor.DarkRed;
 
-        foreach (var diagnostic in syntaxTree.Diagnostics)
+        foreach (var diagnostic in diagnostics)
         {
             Console.WriteLine(diagnostic);
         }

@@ -51,6 +51,12 @@ public sealed class Binder
         };
     }
 
+    private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax)
+    {        
+        var value = syntax.Value ?? 0;
+        return new BoundLiteralExpression(value);
+    }
+
     private BoundExpression BindUnaryExpression(UnaryExpressionSyntax syntax)
     {
         BoundExpression boundOperand = BindExpression(syntax.Operand);
@@ -75,12 +81,6 @@ public sealed class Binder
             SyntaxKind.MinusToken => BoundUnaryOperatorKind.Negation,
             _ => throw new Exception($"Unexpected unary operator {kind}")
         };
-    }
-
-    private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax)
-    {
-        var value = syntax.LiteralToken.Value as Int32? ?? 0;
-        return new BoundLiteralExpression(value);
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using CFlat.Compiler.CodeAnalysis.Extensions;
 using CFlat.Compiler.Enums;
 
 namespace CFlat.Compiler.CodeAnalysis.Syntax;
@@ -70,6 +71,21 @@ internal sealed class Lexer
             Int32 length = _position - start;
             String text = _text.Substring(start, length);
             return new SyntaxToken(SyntaxKind.WhitespaceToken, start, text);
+        }
+
+        if (Char.IsLetter(Current))
+        {
+            Int32 start = _position;
+
+            while (Char.IsLetter(Current))
+            {
+                Next();
+            }
+
+            Int32 length = _position - start;
+            String text = _text.Substring(start, length);
+            var kind = SyntaxFacts.GetKeywordKind(text);
+            return new SyntaxToken(kind, start, text);
         }
 
         switch (Current)

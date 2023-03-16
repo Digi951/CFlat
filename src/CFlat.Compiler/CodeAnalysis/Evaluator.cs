@@ -15,21 +15,21 @@ public sealed class Evaluator
         _root = root;
     }
 
-    public Int32 Evaluate()
+    public object Evaluate()
     {
         return EvaluateExpression(_root);
     }
 
-    private Int32 EvaluateExpression(BoundExpression node)
+    private object EvaluateExpression(BoundExpression node)
     {
         if (node is BoundLiteralExpression n)
         {
-            return (Int32)n.Value;
+            return n.Value;
         }
 
         if (node is BoundUnaryExpression u)
         {
-            Int32 operand = EvaluateExpression(u.Operand);
+            Int32 operand = (Int32)EvaluateExpression(u.Operand);
 
             return u.OperatorKind switch
             {
@@ -41,8 +41,8 @@ public sealed class Evaluator
 
         if (node is BoundBinaryExpression b)
         {
-            Int32 left = EvaluateExpression(b.Left);
-            Int32 right = EvaluateExpression(b.Right);
+            Int32 left = (Int32)EvaluateExpression(b.Left);
+            Int32 right = (Int32)EvaluateExpression(b.Right);
 
             return b.OperatorKind switch
             {

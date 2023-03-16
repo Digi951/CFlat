@@ -26,5 +26,15 @@ internal static class SyntaxFacts
             _ => 0
         };
     }
+
+    public static SyntaxKind GetKeywordKind(string text)
+    {
+        return text switch
+        {
+            "true" => SyntaxKind.TrueKeyword,
+            "false" => SyntaxKind.FalseKeyword,
+            _ => SyntaxKind.IdentifierToken
+        };
+    }
 }
 

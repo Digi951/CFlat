@@ -14,6 +14,11 @@ public enum SyntaxKind
     OpenParenthesisToken,
     CloseParenthesisToken,
 
+    // Keywords
+    TrueKeyword,
+    FalseKeyword,
+    IdentifierToken,
+
     // Expressions
     LiteralExpression,
     UnaryExpression,
