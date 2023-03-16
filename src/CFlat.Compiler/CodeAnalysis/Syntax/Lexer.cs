@@ -107,14 +107,18 @@ internal sealed class Lexer
                 return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(");
             case ')':
                 return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")");
-            case '!':
-                return new SyntaxToken(SyntaxKind.BangToken, _position++, "!");
             case '&':
                 if (Lookahed == '&') { return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, _position += 2, "&&"); }
                 break;
             case '|':
                 if (Lookahed == '|') { return new SyntaxToken(SyntaxKind.PipePipeToken, _position += 2, "||"); }
-                break;                  
+                break;
+            case '=':
+                if (Lookahed == '=') { return new SyntaxToken(SyntaxKind.EqualsEqualsToken, _position += 2, "=="); }
+                break;
+            case '!':
+                if (Lookahed == '=') { return new SyntaxToken(SyntaxKind.BangEqualsToken, _position += 2, "!="); }
+                else { return new SyntaxToken(SyntaxKind.BangToken, _position++, "!"); }
         }
 
         _diagnostics.Add($"ERROR: Bad character input: {Current}");

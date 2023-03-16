@@ -11,20 +11,26 @@ internal sealed class BoundBinaryOperator
 
     }
 
+    public BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type operandType, Type resultType)
+        : this(syntaxKind, kind, operandType, operandType, resultType)
+    {
+
+    }
+
     private BoundBinaryOperator(SyntaxKind syntaxKind, BoundBinaryOperatorKind kind, Type leftType, Type rightType, Type resultType)
     {
         SyntaxKind = syntaxKind;
         Kind = kind;
         LeftType = leftType;
         RightType = rightType;
-        ResultType = resultType;
+        Type = resultType;
     }
 
     public SyntaxKind SyntaxKind { get; }
     public BoundBinaryOperatorKind Kind { get; }
     public Type LeftType { get; }
     public Type RightType { get; }
-    public Type ResultType { get; }
+    public Type Type { get; }
     
 
     private static BoundBinaryOperator[] _operators =
@@ -33,9 +39,13 @@ internal sealed class BoundBinaryOperator
         new BoundBinaryOperator(SyntaxKind.MinusToken, BoundBinaryOperatorKind.Subtraction, typeof(Int32)),
         new BoundBinaryOperator(SyntaxKind.StarToken, BoundBinaryOperatorKind.Multiplication, typeof(Int32)),
         new BoundBinaryOperator(SyntaxKind.SlashToken, BoundBinaryOperatorKind.Division, typeof(Int32)),
+        new BoundBinaryOperator(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, typeof(Int32), typeof(Boolean)),
+        new BoundBinaryOperator(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, typeof(Int32), typeof(Boolean)),
 
         new BoundBinaryOperator(SyntaxKind.AmpersandAmpersandToken, BoundBinaryOperatorKind.LogicalAnd, typeof(Boolean)),
         new BoundBinaryOperator(SyntaxKind.PipePipeToken, BoundBinaryOperatorKind.LogicalOr, typeof(Boolean)),
+        new BoundBinaryOperator(SyntaxKind.EqualsEqualsToken, BoundBinaryOperatorKind.Equals, typeof(Boolean)),
+        new BoundBinaryOperator(SyntaxKind.BangEqualsToken, BoundBinaryOperatorKind.NotEquals, typeof(Boolean)),
     };
 
 
