@@ -26,43 +26,16 @@ public sealed class Binder
     {
         BoundExpression boundLeft = BindExpression(syntax.Left);
         BoundExpression boundRight = BindExpression(syntax.Right);
-        var boundOperatorKind = BindBinaryOperatorKind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
+        var boundOperator = BoundBinaryOperator.Bind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
 
-        if (boundOperatorKind is null)
+        if (boundOperator is null)
         {
             _diagnostics.Add($"Binary operator '{syntax.OperatorToken.Text}' is not defined for type {boundLeft.Type} and {boundRight.Type}");
             return boundLeft;
         }
 
-        return new BoundBinaryExpression(boundLeft, boundOperatorKind.Value, boundRight);
-    }
-
-    private BoundBinaryOperatorKind? BindBinaryOperatorKind(SyntaxKind kind, Type leftType, Type rightType)
-    {
-        if (leftType == typeof(Int32) && rightType == typeof(Int32))
-        {
-            return kind switch
-            {
-                SyntaxKind.PlusToken => BoundBinaryOperatorKind.Addition,
-                SyntaxKind.MinusToken => BoundBinaryOperatorKind.Subtraction,
-                SyntaxKind.StarToken => BoundBinaryOperatorKind.Multiplication,
-                SyntaxKind.SlashToken => BoundBinaryOperatorKind.Division,
-                _ => null
-            };
-        }
-
-        if (leftType == typeof(Boolean) && rightType == typeof(Boolean))
-        {
-            return kind switch
-            {
-                SyntaxKind.AmpersandAmpersandToken => BoundBinaryOperatorKind.LogicalAnd,
-                SyntaxKind.PipePipeToken => BoundBinaryOperatorKind.LogicalOr,
-                _ => null
-            };
-        }
-
-        return null;
-    }
+        return new BoundBinaryExpression(boundLeft, boundOperator, boundRight);
+    }       
 
     private BoundExpression BindLiteralExpression(LiteralExpressionSyntax syntax)
     {        
@@ -73,39 +46,15 @@ public sealed class Binder
     private BoundExpression BindUnaryExpression(UnaryExpressionSyntax syntax)
     {
         BoundExpression boundOperand = BindExpression(syntax.Operand);
-        var boundOperatorKind = BindUnaryOperatorKind(syntax.OperatorToken.Kind, boundOperand.Type);
+        var boundOperator = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
 
-        if (boundOperatorKind is null )
+        if (boundOperator is null )
         {
             _diagnostics.Add($"Unary operator '{syntax.OperatorToken.Text}' is not defined for type {boundOperand.Type}");
             return boundOperand;
         }
 
-        return new BoundUnaryExpression(boundOperatorKind.Value, boundOperand);
-    }
-
-    private BoundUnaryOperatorKind? BindUnaryOperatorKind(SyntaxKind kind, Type operandType)
-    {
-        if (operandType == typeof(Int32))
-        {
-            return kind switch
-            {
-                SyntaxKind.PlusToken => BoundUnaryOperatorKind.Identity,
-                SyntaxKind.MinusToken => BoundUnaryOperatorKind.Negation,
-                _ => null
-            };
-        }
-
-        if (operandType == typeof(Boolean))
-        {
-            return kind switch
-            {
-                SyntaxKind.BangToken => BoundUnaryOperatorKind.LogicalNegation, 
-                _ => null
-            };
-        }
-
-        return null;
-    }
+        return new BoundUnaryExpression(boundOperator, boundOperand);
+    }    
 }
 

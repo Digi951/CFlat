@@ -4,9 +4,9 @@ namespace CFlat.Compiler.CodeAnalysis.Binding;
 
 internal sealed class BoundBinaryExpression : BoundExpression
 {
-    public BoundBinaryExpression(BoundExpression left, BoundBinaryOperatorKind operatorKind, BoundExpression right)
+    public BoundBinaryExpression(BoundExpression left, BoundBinaryOperator op, BoundExpression right)
     {
-        OperatorKind = operatorKind;
+        Op = op;
         Right = right;
         Left = left;
     }
@@ -15,6 +15,6 @@ internal sealed class BoundBinaryExpression : BoundExpression
     public override Type Type => Left.Type;
 
     public BoundExpression Left { get; }
-    public BoundBinaryOperatorKind OperatorKind { get; }
+    public BoundBinaryOperator Op { get; }
     public BoundExpression Right { get; }
 }
