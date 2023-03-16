@@ -10,10 +10,12 @@
     <None Remove="CodeAnalysis\" />
     <None Remove="CodeAnalysis\Syntax\" />
     <None Remove="CodeAnalysis\Enums\" />
+    <None Remove="CodeAnalysis\Extensions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CodeAnalysis\" />
     <Folder Include="CodeAnalysis\Syntax\" />
     <Folder Include="CodeAnalysis\Enums\" />
+    <Folder Include="CodeAnalysis\Extensions\" />
   </ItemGroup>
 </Project>

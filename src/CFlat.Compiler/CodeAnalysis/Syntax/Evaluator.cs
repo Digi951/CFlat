@@ -24,16 +24,31 @@ public sealed class Evaluator
             return (Int32)n.LiteralToken.Value;
         }
 
+        if (node is UnaryExpressionSyntax u)
+        {
+            Int32 operand = EvaluateExpression(u.Operand);
+
+            return u.OperatorToken.Kind switch
+            {
+                SyntaxKind.PlusToken => operand,
+                SyntaxKind.MinusToken => -operand,
+                _ => throw new Exception($"Unexpected unary operator {u.OperatorToken.Kind}")
+            };
+        }
+
         if (node is BinaryExpressionSyntax b)
         {
             Int32 left = EvaluateExpression(b.Left);
             Int32 right = EvaluateExpression(b.Right);
 
-            if (b.OperatorToken.Kind == SyntaxKind.PlusToken) { return left + right; }
-            else if (b.OperatorToken.Kind == SyntaxKind.MinusToken) { return left - right; }
-            else if (b.OperatorToken.Kind == SyntaxKind.StarToken) { return left * right; }
-            else if (b.OperatorToken.Kind == SyntaxKind.SlashToken) { return left / right; }
-            else { throw new Exception($"Unexpected binary operator {b.OperatorToken.Kind}"); }
+            return b.OperatorToken.Kind switch
+            {
+                SyntaxKind.PlusToken => left + right,
+                SyntaxKind.MinusToken => left - right,
+                SyntaxKind.StarToken => left * right,
+                SyntaxKind.SlashToken => left / right,
+                _ => throw new Exception($"Unexpected binary operator {b.OperatorToken.Kind}")
+            };
         }
 
         if (node is ParenthesizedExpressionSyntax p) { return EvaluateExpression(p.Expression); }

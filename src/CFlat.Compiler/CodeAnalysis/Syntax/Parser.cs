@@ -1,5 +1,6 @@
 ﻿using System;
 using CFlat.Compiler.Enums;
+using CFlat.Compiler.CodeAnalysis.Extensions;
 
 namespace CFlat.Compiler.CodeAnalysis.Syntax;
 
@@ -9,6 +10,10 @@ internal sealed class Parser
     private readonly SyntaxToken[] _tokens;
     private Int32 _position;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="text"></param>
     public Parser(String text)
     {
         List<SyntaxToken> tokens = new();
@@ -77,11 +82,24 @@ internal sealed class Parser
 
     private ExpressionSyntax ParseTermExpression(Int32 parentPrecedence = 0)
     {
-        ExpressionSyntax left = ParsePrimaryExpression();
+        ExpressionSyntax left;
+
+        Int32 unaryOperatorPrecedence = Current.Kind.GetUnaryOperatorPrecedence();
+
+        if (unaryOperatorPrecedence != 0 && unaryOperatorPrecedence >= parentPrecedence)
+        {
+            SyntaxToken operatorToken = NextToken();
+            ExpressionSyntax operand = ParseTermExpression(unaryOperatorPrecedence);
+            left = new UnaryExpressionSyntax(operatorToken, operand);
+        }
+        else
+        {
+            left = ParsePrimaryExpression();
+        }
 
         while (true)
         {
-            Int32 precedence = GetBinaryOperatorPrecedence(Current.Kind);
+            Int32 precedence = Current.Kind.GetBinaryOperatorPrecedence(); ;
 
             if (precedence == 0 || precedence <= parentPrecedence) { break; }
 
@@ -91,19 +109,7 @@ internal sealed class Parser
         }
 
         return left;
-    }
-
-    private static Int32 GetBinaryOperatorPrecedence(SyntaxKind kind)
-    {
-        return kind switch
-        {
-            SyntaxKind.PlusToken => 1,
-            SyntaxKind.MinusToken => 1,
-            SyntaxKind.StarToken => 2,
-            SyntaxKind.SlashToken => 2,
-            _ => 0
-        } ;
-    } 
+    }    
 
     private ExpressionSyntax ParsePrimaryExpression()
     {
