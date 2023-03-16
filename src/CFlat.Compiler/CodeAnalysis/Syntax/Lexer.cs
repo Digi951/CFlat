@@ -15,12 +15,17 @@ internal sealed class Lexer
         _text = text;
     }
 
-    private Char Current
+    private Char Current => Peek(0);
+    private Char Lookahed => Peek(1);
+    
+
+    private char Peek(Int32 offset)
     {
-        get
-        {
-            return _position >= _text.Length ? '\0' : _text[_position];
-        }
+        var index = _position + offset;
+
+        return index >= _text.Length
+                ? '\0'
+                : _text[index];
     }
 
     public IEnumerable<String> Diagnostics => _diagnostics;
@@ -102,10 +107,18 @@ internal sealed class Lexer
                 return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(");
             case ')':
                 return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")");
-            default:
-                _diagnostics.Add($"ERROR: Bad character input: {Current}");
-                return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1));
+            case '!':
+                return new SyntaxToken(SyntaxKind.BangToken, _position++, "!");
+            case '&':
+                if (Lookahed == '&') { return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, _position += 2, "&&"); }
+                break;
+            case '|':
+                if (Lookahed == '|') { return new SyntaxToken(SyntaxKind.PipePipeToken, _position += 2, "||"); }
+                break;                  
         }
+
+        _diagnostics.Add($"ERROR: Bad character input: {Current}");
+        return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1));
     }
 }
 

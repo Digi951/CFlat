@@ -127,7 +127,7 @@ internal sealed class Parser
             case SyntaxKind.FalseKeyword:
             {
                 SyntaxToken keywordToken = NextToken();
-                bool value = Current.Kind == SyntaxKind.TrueKeyword;
+                bool value = keywordToken.Kind == SyntaxKind.TrueKeyword;
                 return new LiteralExpressionSyntax(keywordToken, value);
             }
             default:
