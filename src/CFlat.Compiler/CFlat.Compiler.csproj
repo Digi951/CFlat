@@ -11,11 +11,13 @@
     <None Remove="CodeAnalysis\Syntax\" />
     <None Remove="CodeAnalysis\Enums\" />
     <None Remove="CodeAnalysis\Extensions\" />
+    <None Remove="CodeAnalysis\Binding\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CodeAnalysis\" />
     <Folder Include="CodeAnalysis\Syntax\" />
     <Folder Include="CodeAnalysis\Enums\" />
     <Folder Include="CodeAnalysis\Extensions\" />
+    <Folder Include="CodeAnalysis\Binding\" />
   </ItemGroup>
 </Project>

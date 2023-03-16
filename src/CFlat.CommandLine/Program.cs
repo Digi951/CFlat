@@ -1,6 +1,6 @@
-﻿using CFlat.Compiler;
-using CFlat.Compiler.Enums;
-using CFlat.Compiler.CodeAnalysis.Syntax;
+﻿using CFlat.Compiler.CodeAnalysis.Syntax;
+using CFlat.Compiler.CodeAnalysis;
+using CFlat.Compiler.CodeAnalysis.Binding;
 
 Boolean showTree = false;
 
@@ -24,17 +24,22 @@ while (true)
     }
 
     var syntaxTree = SyntaxTree.Parse(line);
+    var binder = new Binder();
+    var boundExpression = binder.BindExpression(syntaxTree.Root);
+
+    IReadOnlyList<String> diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
 
     if (showTree)
     {
         Console.ForegroundColor = ConsoleColor.DarkGray;
         PrettyPrint(syntaxTree.Root);
         Console.ResetColor();
-    }    
+    }
 
-    if (!syntaxTree.Diagnostics.Any())
+
+    if (!diagnostics.Any())
     {
-        Evaluator evaluator = new(syntaxTree.Root);
+        Evaluator evaluator = new(boundExpression);
         Int32 result = evaluator.Evaluate();
         Console.WriteLine(result);
     }

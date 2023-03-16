@@ -1,5 +1,4 @@
-﻿using System;
-namespace CFlat.Compiler.Enums;
+﻿namespace CFlat.Compiler.Enums;
 
 public enum SyntaxKind
 {
