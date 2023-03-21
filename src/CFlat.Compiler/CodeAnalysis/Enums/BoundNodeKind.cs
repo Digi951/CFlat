@@ -2,7 +2,8 @@
 
 public enum BoundNodeKind
 {
+    LiteralExpression,
     UnaryExpression,
-    LiteralExpression
+    BinaryExpression
 }
 
