@@ -25,8 +25,8 @@ internal sealed class Parser
         {
             token = lexer.Lex();
 
-            if (token.Kind is (not SyntaxKind.WhitespaceToken and
-                                not SyntaxKind.BadToken))
+            if (token.Kind is not SyntaxKind.WhitespaceToken &&
+                token.Kind is not SyntaxKind.BadToken)
             {
                 tokens.Add(token);
             }
@@ -75,7 +75,7 @@ internal sealed class Parser
     /// <returns></returns>
     public SyntaxTree Parse()
     {
-        ExpressionSyntax expression = ParseBinaryExpression();
+        ExpressionSyntax expression = ParseExpression();
         SyntaxToken endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
         return new SyntaxTree(_diagnostics, expression, endOfFileToken);
     }
@@ -137,7 +137,7 @@ internal sealed class Parser
             case SyntaxKind.OpenParenthesisToken:
             {
                 var left = NextToken();
-                var expression = ParseBinaryExpression();
+                var expression = ParseExpression();
                 var right = MatchToken(SyntaxKind.CloseParenthesisToken);
                 return new ParenthesizedExpressionSyntax(left, expression, right);
             }
