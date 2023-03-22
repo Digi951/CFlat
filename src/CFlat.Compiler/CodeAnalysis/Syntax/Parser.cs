@@ -75,12 +75,31 @@ internal sealed class Parser
     /// <returns></returns>
     public SyntaxTree Parse()
     {
-        ExpressionSyntax expression = ParseTermExpression();
+        ExpressionSyntax expression = ParseBinaryExpression();
         SyntaxToken endOfFileToken = MatchToken(SyntaxKind.EndOfFileToken);
         return new SyntaxTree(_diagnostics, expression, endOfFileToken);
     }
 
-    private ExpressionSyntax ParseTermExpression(Int32 parentPrecedence = 0)
+    private ExpressionSyntax ParseExpression()
+    {
+        return ParseAssignmentExpression();
+    }
+
+    private ExpressionSyntax ParseAssignmentExpression()
+    {
+        if (Peek(0).Kind == SyntaxKind.IdentifierToken &&
+            Peek(1).Kind == SyntaxKind.EqualsToken)
+        {
+            SyntaxToken identifierToken = NextToken();
+            SyntaxToken operatorToken = NextToken();
+            ExpressionSyntax right = ParseAssignmentExpression();
+            return new AssignmentExpressionSyntax(identifierToken, operatorToken, right);
+        }
+
+        return ParseBinaryExpression();
+    }
+
+    private ExpressionSyntax ParseBinaryExpression(Int32 parentPrecedence = 0)
     {
         ExpressionSyntax left;
 
@@ -89,7 +108,7 @@ internal sealed class Parser
         if (unaryOperatorPrecedence != 0 && unaryOperatorPrecedence >= parentPrecedence)
         {
             SyntaxToken operatorToken = NextToken();
-            ExpressionSyntax operand = ParseTermExpression(unaryOperatorPrecedence);
+            ExpressionSyntax operand = ParseBinaryExpression(unaryOperatorPrecedence);
             left = new UnaryExpressionSyntax(operatorToken, operand);
         }
         else
@@ -104,7 +123,7 @@ internal sealed class Parser
             if (precedence == 0 || precedence <= parentPrecedence) { break; }
 
             SyntaxToken operatorToken = NextToken();
-            ExpressionSyntax right = ParseTermExpression(precedence);
+            ExpressionSyntax right = ParseBinaryExpression(precedence);
             left = new BinaryExpressionSyntax(left, operatorToken, right);
         }
 
@@ -118,7 +137,7 @@ internal sealed class Parser
             case SyntaxKind.OpenParenthesisToken:
             {
                 var left = NextToken();
-                var expression = ParseTermExpression();
+                var expression = ParseBinaryExpression();
                 var right = MatchToken(SyntaxKind.CloseParenthesisToken);
                 return new ParenthesizedExpressionSyntax(left, expression, right);
             }
@@ -130,12 +149,16 @@ internal sealed class Parser
                 bool value = keywordToken.Kind == SyntaxKind.TrueKeyword;
                 return new LiteralExpressionSyntax(keywordToken, value);
             }
+            case SyntaxKind.IdentifierToken:
+            {
+                var identifierToken = NextToken(); 
+                return new NameExpressionSyntax(identifierToken);
+            }        
             default:
             {
                 var numberToken = MatchToken(SyntaxKind.NumberToken);
-                   return new LiteralExpressionSyntax(numberToken);
+                return new LiteralExpressionSyntax(numberToken);
             }
         }
     }
 }
-

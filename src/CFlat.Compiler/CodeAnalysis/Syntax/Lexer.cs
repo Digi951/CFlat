@@ -123,7 +123,11 @@ internal sealed class Lexer
                     _position += 2;
                     return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==");
                 }
-                break;
+                else
+                {
+                    _position++;
+                    return new SyntaxToken(SyntaxKind.EqualsToken, start, "=");
+                }
             case '!':
                 if (Lookahed == '=')
                 {
@@ -132,7 +136,7 @@ internal sealed class Lexer
                 }
                 else
                 {
-                    _position ++;
+                    _position++;
                     return new SyntaxToken(SyntaxKind.BangToken, start, "!");
                 }
         }

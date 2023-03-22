@@ -26,4 +26,3 @@ sealed class BinaryExpressionSyntax : ExpressionSyntax
         yield return Right;
     }
 }
-

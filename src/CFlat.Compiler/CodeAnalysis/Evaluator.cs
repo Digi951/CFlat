@@ -8,10 +8,12 @@ namespace CFlat.Compiler.CodeAnalysis;
 public sealed class Evaluator
 {
     private readonly BoundExpression _root;
+    private readonly Dictionary<VariableSymbol, object> _variables;
 
-    public Evaluator(BoundExpression root)
+    public Evaluator(BoundExpression root, Dictionary<VariableSymbol, object> variables)
     {
         _root = root;
+        _variables = variables;
     }
 
     public object Evaluate()
@@ -24,6 +26,18 @@ public sealed class Evaluator
         if (node is BoundLiteralExpression n)
         {
             return n.Value;
+        }
+
+        if (node is BoundVariableExpression v)
+        {
+            return _variables[v.Variable];
+        }
+
+        if (node is BoundAssignmentExpression a)
+        {
+            var value = EvaluateExpression(a.Expression);
+            _variables[a.Variable] = value;
+            return value;
         }
 
         if (node is BoundUnaryExpression u)

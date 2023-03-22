@@ -12,9 +12,9 @@ public class Compilation
 
     public SyntaxTree Syntax { get; }
 
-    public EvaluationResult Evaluate()
+    public EvaluationResult Evaluate(Dictionary<VariableSymbol, Object> variables)
     {
-        Binder binder = new();
+        Binder binder = new(variables);
         BoundExpression boundExpression = binder.BindExpression(Syntax.Root);
 
         var diagnostics = Syntax.Diagnostics.Concat(binder.Diagnostics).ToArray();
@@ -23,7 +23,7 @@ public class Compilation
             return new EvaluationResult(diagnostics, null);
         }
 
-        Evaluator evaluator = new(boundExpression);
+        Evaluator evaluator = new(boundExpression, variables);
         var value = evaluator.Evaluate();
         return new EvaluationResult(Array.Empty<Diagnostic>(), value);
     }

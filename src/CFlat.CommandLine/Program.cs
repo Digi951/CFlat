@@ -3,6 +3,7 @@ using CFlat.Compiler.CodeAnalysis;
 using CFlat.Compiler.CodeAnalysis.Binding;
 
 Boolean showTree = false;
+var variables = new Dictionary<VariableSymbol, Object>();
 
 while (true)
 {
@@ -25,7 +26,7 @@ while (true)
 
     var syntaxTree = SyntaxTree.Parse(line);
     var compilation = new Compilation(syntaxTree);
-    var result = compilation.Evaluate();
+    var result = compilation.Evaluate(variables);
 
     var diagnostics = result.Diagnostics;
 
@@ -42,7 +43,6 @@ while (true)
     }
     else
     {
-
         foreach (var diagnostic in diagnostics)
         {
             Console.WriteLine();
