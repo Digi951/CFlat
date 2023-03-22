@@ -8,7 +8,7 @@ internal sealed class Lexer
 {
     private readonly String _text;
     private Int32 _position;
-    private List<String> _diagnostics = new();
+    private DiagnosticBag _diagnostics = new();
 
     public Lexer(String text)
     {
@@ -28,7 +28,7 @@ internal sealed class Lexer
                 : _text[index];
     }
 
-    public IEnumerable<String> Diagnostics => _diagnostics;
+    public DiagnosticBag Diagnostics => _diagnostics;
 
     public void Next()
     {
@@ -46,10 +46,10 @@ internal sealed class Lexer
             return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0");
         }
 
+        var start = _position;
+
         if (Char.IsDigit(Current))
         {
-            Int32 start = _position;
-
             while (Char.IsDigit(Current))
             {
                 Next();
@@ -59,15 +59,13 @@ internal sealed class Lexer
             String text = _text.Substring(start, length);
             if (!Int32.TryParse(text, out var value))
             {
-                _diagnostics.Add($"The number {_text} isn't a valid Int32.");
+                _diagnostics. ReportInvalidNumber(new TextSpan(start, length), _text, typeof(Int32));
             }
             return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
         }
 
         if (char.IsWhiteSpace(Current))
         {
-            Int32 start = _position;
-
             while (Char.IsWhiteSpace(Current))
             {
                 Next();
@@ -80,8 +78,6 @@ internal sealed class Lexer
 
         if (Char.IsLetter(Current))
         {
-            Int32 start = _position;
-
             while (Char.IsLetter(Current))
             {
                 Next();
@@ -108,20 +104,40 @@ internal sealed class Lexer
             case ')':
                 return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")");
             case '&':
-                if (Lookahed == '&') { return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, _position += 2, "&&"); }
+                if (Lookahed == '&')
+                {
+                    _position += 2;
+                    return new SyntaxToken(SyntaxKind.AmpersandAmpersandToken, start, "&&");
+                }
                 break;
             case '|':
-                if (Lookahed == '|') { return new SyntaxToken(SyntaxKind.PipePipeToken, _position += 2, "||"); }
+                if (Lookahed == '|')
+                {
+                    _position += 2;
+                    return new SyntaxToken(SyntaxKind.PipePipeToken, start, "||");
+                }
                 break;
             case '=':
-                if (Lookahed == '=') { return new SyntaxToken(SyntaxKind.EqualsEqualsToken, _position += 2, "=="); }
+                if (Lookahed == '=')
+                {
+                    _position += 2;
+                    return new SyntaxToken(SyntaxKind.EqualsEqualsToken, start, "==");
+                }
                 break;
             case '!':
-                if (Lookahed == '=') { return new SyntaxToken(SyntaxKind.BangEqualsToken, _position += 2, "!="); }
-                else { return new SyntaxToken(SyntaxKind.BangToken, _position++, "!"); }
+                if (Lookahed == '=')
+                {
+                    _position += 2;
+                    return new SyntaxToken(SyntaxKind.BangEqualsToken, start, "!=");
+                }
+                else
+                {
+                    _position ++;
+                    return new SyntaxToken(SyntaxKind.BangToken, start, "!");
+                }
         }
 
-        _diagnostics.Add($"ERROR: Bad character input: {Current}");
+        _diagnostics.ReportBadCharacter(_position, Current);
         return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1));
     }
 }

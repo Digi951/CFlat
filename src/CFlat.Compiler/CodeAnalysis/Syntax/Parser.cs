@@ -6,7 +6,7 @@ namespace CFlat.Compiler.CodeAnalysis.Syntax;
 
 internal sealed class Parser
 {
-    private List<String> _diagnostics = new();
+    private DiagnosticBag _diagnostics = new();
     private readonly SyntaxToken[] _tokens;
     private Int32 _position;
 
@@ -37,7 +37,7 @@ internal sealed class Parser
         _diagnostics.AddRange(lexer.Diagnostics);
     }
 
-    public IEnumerable<String> Diagnostics => _diagnostics;
+    public DiagnosticBag Diagnostics => _diagnostics;
 
     private SyntaxToken Peek(Int32 offset)
     {
@@ -65,7 +65,7 @@ internal sealed class Parser
             return NextToken();
         }
 
-        _diagnostics.Add($"ERROR: Unexpexted token <{Current.Kind}>, expected <{kind}>");
+        _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
         return new SyntaxToken(kind, Current.Position);
     }
 

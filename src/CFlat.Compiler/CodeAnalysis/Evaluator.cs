@@ -1,7 +1,6 @@
 ﻿using System;
 using CFlat.Compiler.CodeAnalysis.Binding;
 using CFlat.Compiler.CodeAnalysis.Enums;
-using CFlat.Compiler.CodeAnalysis.Syntax;
 using CFlat.Compiler.Enums;
 
 namespace CFlat.Compiler.CodeAnalysis;

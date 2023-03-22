@@ -24,10 +24,10 @@ while (true)
     }
 
     var syntaxTree = SyntaxTree.Parse(line);
-    var binder = new Binder();
-    var boundExpression = binder.BindExpression(syntaxTree.Root);
+    var compilation = new Compilation(syntaxTree);
+    var result = compilation.Evaluate();
 
-    var diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
+    var diagnostics = result.Diagnostics;
 
     if (showTree)
     {
@@ -37,21 +37,36 @@ while (true)
     }
 
     if (!diagnostics.Any())
-    {
-        Evaluator evaluator = new(boundExpression);
-        var result = evaluator.Evaluate();
-        Console.WriteLine(result);
+    {        
+        Console.WriteLine(result.Value);
     }
     else
     {
-        Console.ForegroundColor = ConsoleColor.DarkRed;
 
         foreach (var diagnostic in diagnostics)
         {
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine(diagnostic);
+            Console.ResetColor();
+
+            String prefix = line.Substring(0, diagnostic.Span.Start);
+            String error = line.Substring(diagnostic.Span.Start, diagnostic.Span.Length);
+            String suffix = line.Substring(diagnostic.Span.End);
+
+            Console.Write("    ");
+            Console.Write(prefix);
+
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.Write(error);
+            Console.ResetColor();
+
+            Console.Write(suffix);
+            Console.WriteLine();
         }
 
-        Console.ResetColor();
+        Console.WriteLine();
     }
 }
 
